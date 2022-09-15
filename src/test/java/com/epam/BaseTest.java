@@ -3,52 +3,51 @@ package com.epam;
 import org.example.Factory;
 import org.example.pages.*;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.*;
 
-import static org.example.Factory.getDriver;
+import java.net.MalformedURLException;
 
 public class BaseTest {
 
-    private static WebDriver driver = null;
-
-
+    protected static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<>();
     private static final String AVIC_URL = "https://avic.ua/";
 
     @BeforeMethod
-    public void testsSetUp() {
-        driver = getDriver();
-        driver.manage().window().maximize();
-        driver.get(AVIC_URL);
+    @Parameters(value = {"browser"})
+    public void testsSetUp(@Optional("chrome") String browser) throws MalformedURLException {
+        driver.set(Factory.initializeBrowser(browser));
+        getDriver().manage().window().maximize();
+        getDriver().get(AVIC_URL);
     }
 
     @AfterMethod
     public void tearDown() {
-        driver.close();
+        driver.get().close();
+    }
+
+    public WebDriver getDriver() {
+        return driver.get();
     }
 
     public SamsungPage getSamsungPage() {
-        return new SamsungPage(driver);
+        return new SamsungPage(driver.get());
     }
 
     public HomePage getHomePage() {
-        return new HomePage(driver);
+        return new HomePage(driver.get());
     }
 
     public Header getHeader() {
-        return new Header(driver);
+        return new Header(driver.get());
     }
 
     public Cart getCart() {
-        return new Cart(driver);
+        return new Cart(driver.get());
     }
 
     public LoginPage getLoginPage() {
-        return new LoginPage(driver);
+        return new LoginPage(driver.get());
     }
 
 

@@ -40,7 +40,7 @@ public class AddToCartTest extends BaseTest {
         getCart().clickOnAddToOrder(1);
         getCart().waitForElementToBeClickable(5, getCart().getLocator(2, 1));
         getCart().clickOnPlus(1);
-        getCart().waitForChangeTotalPrice(10, totalPriceOld);
+        getCart().waitForChangeTotalPrice(15, totalPriceOld);
         List<WebElement> prices = getCart().getItemPrices();
         int numberNew = 0;
         for (int i = 0; i < prices.size(); i++) {
