@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite parallel="classes" name="All Test Suite">
+    <test thread-count="5" parallel="classes" verbose="2" preserve-order="true" name="C:/Users/erons/IdeaProjects/SeleniumGrid">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.epam.AddToCartTest">
+                <methods>
+                    <include name="checkAddToOrder"/>
+                    <include name="checkAmountAfterAddQuantity"/>
+                    <include name="checkCartSignIn"/>
+                </methods>
+            </class>
+            <class name="com.epam.AddToCartTest2">
+                <methods>
+                    <include name="checkCartSignIn"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
