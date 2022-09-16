@@ -3,11 +3,9 @@ package org.example;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -32,7 +30,6 @@ public class Factory {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         assert browser != null;
         if (browser.equals("chrome")) {
             System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
@@ -40,16 +37,8 @@ public class Factory {
         }
         if (browser.equals("firefox")) {
             System.setProperty("webdriver.gecko.driver", "src\\main\\resources\\geckodriver.exe");
-            FirefoxOptions options = new FirefoxOptions();
-            FirefoxProfile profile = new FirefoxProfile();
-            profile.setPreference("browser.helperApps.neverAsk.openFile", "application/octet-stream");
-            profile.setAcceptUntrustedCertificates(true);
-            profile.setAssumeUntrustedCertificateIssuer(false);
-            profile.setPreference("geo.enabled", true);
-            profile.setPreference("geo.prompt.testing", true);
-            profile.setPreference("geo.prompt.testing.allow", true);
-            options.setProfile(profile);
-            return new FirefoxDriver(options);
+            FirefoxOptions firefoxOptions= Options.getFirefoxOptions();
+            return new FirefoxDriver(firefoxOptions);
         }
         if (browser.equals("edge")) {
             System.setProperty("webdriver.edge.driver", "src\\main\\resources\\msedgedriver.exe");
@@ -58,14 +47,23 @@ public class Factory {
         throw new IllegalArgumentException("No supported driver");
     }
 
+    public static Capabilities getCapabilities(String browser) {
+        Capabilities capabilities = null;
+        if (browser.equals("firefox")) {
+            capabilities = Options.getFirefoxOptions();
+        } else if (browser.equals("chrome")){
+            capabilities = Options.getChromeOptions();
+        }
+        else  capabilities = Options.getEdgeOptions();
+        return capabilities;
+    }
+
+
     public static RemoteWebDriver initializeBrowser(String browser) throws MalformedURLException {
         DesiredCapabilities dc = new DesiredCapabilities();
         RemoteWebDriver driver = null;
 
         if (browser.equals("chrome")) {
-            ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.addArguments("--ignore-certificate-errors");
-            chromeOptions.addArguments("--disable-popup-blocking");
             dc.setBrowserName("chrome");
 
         } else if (browser.equalsIgnoreCase("firefox")) {

@@ -15,36 +15,20 @@ public class BasePage {
 
     WebDriver driver;
 
-    private By locator;
-
-    public By getLocator(int id) {
-        return locator;
-    }
-
-    public By getLocator(int id, int param) {
-        return locator;
-    }
-
     public BasePage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
-    public void waitForVisibilityOfElement(long time, WebElement element) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(time));
+    public void waitForVisibilityOfElement(long seconds, WebElement element) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
         wait.until(ExpectedConditions.visibilityOf(element));
     }
 
-    public void waitForPresenceOfElementLocated(long seconds, By locator) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    public void actionsMoveToElement(WebElement element) {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element);
     }
-
-    public void waitForElementToBeClickable(long seconds, By locator) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
-        wait.until(ExpectedConditions.elementToBeClickable(locator));
-    }
-
     public void waitForPageLoadComplete(long seconds) {
         new WebDriverWait(driver, Duration.ofSeconds(seconds)).until(
                 webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
@@ -53,11 +37,5 @@ public class BasePage {
         new WebDriverWait(driver, Duration.ofSeconds(seconds)).until(
                 webDriver -> ((JavascriptExecutor) webDriver).executeScript("return window.jQuery != undefined && jQuery.active == 0;"));
     }
-
-    public void actionsMoveToElement(WebElement element) {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(element).perform();
-    }
-
 
 }
